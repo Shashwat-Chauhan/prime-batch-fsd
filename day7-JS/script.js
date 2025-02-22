@@ -47,6 +47,7 @@ const showCards = (newData) => {
 
 showCards(data);
 
+
 const deleteCard = (event, elemId) => {
     console.log("Deleted");
     console.log(event)
@@ -68,6 +69,7 @@ const deleteCard = (event, elemId) => {
     const index = data.findIndex((el) => el.id === elemId); // findIndex -> returns the index of the element where the current element id matches the selected id
     data.splice(index, 1); // splice the array by removing the element from that index and delete count is 1
     showCards(data);
+    updateDropDown()
 }
 
 // For Bubbling, you need to add eventListeners to both parent and child
@@ -86,3 +88,39 @@ const handleSelect = (e) => {
     showCards(newData)
     console.log(data)
 };
+
+
+const formSubmit = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const city = e.target.city.value;
+    const newCardData = {
+        id: `id-${data.length}`,
+        name: name,
+        city: city
+    }
+    data.push(newCardData);
+    showCards(data);
+    console.log(data)
+    updateDropDown()
+}
+
+const updateDropDown = () => {
+    let options = []
+    data.forEach((el) => {
+        if (!options.includes(el.city)){
+            options.push(el.city);
+        }
+    })
+    const select = document.getElementById("select");
+    select.innerHTML = "";
+    options.forEach((el) => {
+        const option = document.createElement("option");
+        option.value = el;
+        option.innerText = el;
+        select.appendChild(option);
+    })
+
+}
+
+updateDropDown(data);

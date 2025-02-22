@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <select onchange="handleSelect(event)">
-      <option value="Delhi">Delhi</option>
-      <option value="Bangalore">Bangalore</option>
-      <option value="Mumbai">Mumbai</option>
-      <option value="Chennai">Chennai</option>
+    <select onchange="handleSelect(event)" id="select">
+      
     </select>
+
+      <form onsubmit="formSubmit(event)" id="form">
+        <input type="text" placeholder="Enter Name" name="name">
+        <input type="text" placeholder="Enter city" name="city">
+        <button type="submit">ADD</button>
+      </form>
     <div id="root"></div>
     <script src="script.js"></script>
   </body>
