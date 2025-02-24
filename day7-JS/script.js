@@ -1,126 +1,63 @@
-const data = [
-    {
-        id: "rd1",
-        name: "Rakesh",
-        city: "Delhi"
-    },
-    {
-        id: "sm2",
-        name: "Sonia",
-        city: "Mumbai"
-    },
-    {
-        id: "ab3",
-        name: "Amit",
-        city: "Bangalore"
-    },
-    {
-        id: "sc4",
-        name: "Sakshi",
-        city: "Chennai"
-    },
+const root = document.getElementById("root");
+const select = document.getElementById("select");
 
+let data = JSON.parse(localStorage.getItem("cards")) || [
+    { id: "rd1", name: "Rakesh", city: "Delhi" },
+    { id: "sm2", name: "Sonia", city: "Mumbai" },
+    { id: "ab3", name: "Amit", city: "Bangalore" },
+    { id: "sc4", name: "Sakshi", city: "Chennai" },
 ];
 
-const root = document.getElementById("root");
+const saveToLocalStorage = () => {
+    localStorage.setItem("cards", JSON.stringify(data));
+};
 
 const showCards = (newData) => {
     root.innerHTML = "";
-    newData.forEach((el, idx) => {
+    newData.forEach((el) => {
         const card = document.createElement("div");
         card.innerHTML = `
             <div>${el.name}</div>
             <p>${el.city}</p>
-            <button onClick="deleteCard(event, '${el.id}')">Delete</button>
+            <button onClick="deleteCard('${el.id}')">Delete</button>
         `;
-        // card.innerHTML = `
-        //     <div>${el.name}</div>
-        //     <p>${el.city}</p>
-        //     <button onClick="deleteCard(event, ${idx})">Delete</button>
-        // `;
         card.classList.add("card");
         root.appendChild(card);
     });
 };
 
-// When outside double inverted commas -> Inside single inverted comma and vice-versa
-
-showCards(data);
-
-
-const deleteCard = (event, elemId) => {
-    console.log("Deleted");
-    console.log(event)
-    // event.target.remove();
-    // Due to remove, when you delete the element button in the console it shows it has no parent
-    // when you remove the remove statement, then the parent element is shown as till then it is not deleted
-    // event.target.parentElement.remove(); // -> It is deleting only from DOM and not from data
-
-    // console.log("Idx: " + idx)
-    // data.splice(idx, 1); // BUG BUG BUG
-    // Because every time when you delete an element by going in option
-    // such as Noida, then the first element is deleted from array 
-    // which means Noida won't be deleted but Delhi which is the first element will be deleted
-
-    console.log(data);
-
-    // showCards(data)
-
-    const index = data.findIndex((el) => el.id === elemId); // findIndex -> returns the index of the element where the current element id matches the selected id
-    data.splice(index, 1); // splice the array by removing the element from that index and delete count is 1
+const deleteCard = (elemId) => {
+    data = data.filter(el => el.id !== elemId);
+    saveToLocalStorage();
     showCards(data);
-    updateDropDown()
-}
-
-// For Bubbling, you need to add eventListeners to both parent and child
-// When parent has the event listener, and then the child also has eventListener only then bubbling is executed where click on the button also deletes the parent
-// But BUG: Clicking on parent also gets deleted
-
-// event & target difference
-
-// When I am deleting even after that I am filtering and 
+    updateDropDown();
+};
 
 const handleSelect = (e) => {
     const selectedCity = e.target.value;
-    console.log(selectedCity);
-    const newData = data.filter((curr) => curr.city == selectedCity);
-    // console.log(newData);
-    showCards(newData)
-    console.log(data)
+    const newData = data.filter(curr => curr.city == selectedCity);
+    showCards(newData);
 };
-
 
 const formSubmit = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const city = e.target.city.value;
     const newCardData = {
-        id: `id-${data.length}`,
-        name: name,
-        city: city
-    }
+        id: `id-${Date.now()}`, // Unique ID
+        name,
+        city
+    };
     data.push(newCardData);
+    saveToLocalStorage();
     showCards(data);
-    console.log(data)
-    updateDropDown()
-}
+    updateDropDown();
+};
 
 const updateDropDown = () => {
-    let options = []
-    data.forEach((el) => {
-        if (!options.includes(el.city)){
-            options.push(el.city);
-        }
-    })
-    const select = document.getElementById("select");
-    select.innerHTML = "";
-    options.forEach((el) => {
-        const option = document.createElement("option");
-        option.value = el;
-        option.innerText = el;
-        select.appendChild(option);
-    })
+    const options = [...new Set(data.map(el => el.city))];
+    select.innerHTML = options.map(city => `<option value="${city}">${city}</option>`).join(" ");
+};
 
-}
-
-updateDropDown(data);
+showCards(data);
+updateDropDown();

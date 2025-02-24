@@ -7,13 +7,13 @@
 
 body {
   padding: 1rem;
-  background-color: rgb(255, 219, 219);
+  background-color: rgb(154, 153, 153);
 }
 
 .card {
   width: 400px;
-  background-color: rgb(155, 155, 152);
-  border: 2px solid rgb(99, 97, 97);
+  background-color: rgb(120, 120, 119);
+  border: 2px solid rgb(134, 132, 132);
   border-radius: 0.75rem;
   padding: 1rem;
   margin: 1rem auto;
