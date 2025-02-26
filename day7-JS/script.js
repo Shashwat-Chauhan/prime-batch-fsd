@@ -12,6 +12,7 @@ const saveToLocalStorage = () => {
     localStorage.setItem("cards", JSON.stringify(data));
 };
 
+
 const showCards = (newData) => {
     root.innerHTML = "";
     newData.forEach((el) => {
